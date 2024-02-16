@@ -14,6 +14,7 @@ Bookscape is a web-based application designed to help users discover, track, and
   - **Add Comments**: Users can share their thoughts and insights about the book, creating a community of discussions.
   - **Set Ratings**: Users can rate books on a predefined scale, contributing to a community-driven rating system.
   - **Answer Predefined Questions**: Users can respond to a set of questions about the book, designed to encourage deeper reflection and discussion on the content and themes.
+- **Reading Goal**: Users can set the goal for a year and app will track and the progress
 
 ## Local Development Environment Setup
 To get started, clone the repository to your local machine, and run `bundle install` to install dependencies. Then, create and migrate the database with `rails db:create` and `rails db:migrate`. Finally, start the project with `rails server`.
@@ -36,23 +37,36 @@ BOOKSCAPE_DATABASE_PASSWORD=your_secure_password
 This application uses Google Books API. To run the application locally, you'll need to obtain your Google Books API key. Once you have this, add it to the .env file in the root of the project: `GOOGLE_BOOKS_API_KEY=your_google_books_api_key`
 
 
-
-
-## work in progress ##
-## Features
-
-- **Book Browsing**: Users can browse through a list of books in the catalogue.
-- **Book Details**: Users can view detailed information about a book, including its title, author, description, and cover image.
-- **Google Books API Integration**: The application integrates with the Google Books API to fetch and display book data.
-- **Data Validation**: The application validates the JSON data received from the Google Books API to ensure it contains all the required keys.
-- **Unit Testing**: The application includes unit tests to verify the functionality of the code.
-
-
-## Code Examples
-
-
 ## Technologies Used
 
-- **Ruby on Rails**: The application is built using the Ruby on Rails web development framework.
-- **Google Books API**: The application uses the Google Books API to fetch book data.
-- **RSpec**: The application uses the RSpec testing framework for Ruby to write and run unit tests.
+The development of Bookscape involved a comprehensive stack of technologies, frameworks, and practices focused on delivering a robust and scalable web application:
+
+| Category              | Technology                                                                                             | Description                                                                                                                                                            |
+|-----------------------|--------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Backend Framework     | [Ruby on Rails](https://rubyonrails.org/)                                                              | A comprehensive web-application framework that follows the Model-View-Controller (MVC) architecture, facilitating database-backed applications with clean and maintainable code. |
+| Frontend              | [HTML](https://developer.mozilla.org/en-US/docs/Web/HTML), [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS), [Sass](https://sass-lang.com/), React (future update) | Technologies used for structuring and styling the application's user interface, with Sass enabling more complex styles with variables, mixins, and nested rules.        |
+| API Integration       | [Google Books API](https://developers.google.com/books)                                                | Fetches book data to allow users to search for and view detailed information about books, integrating external data sources seamlessly into the application.             |
+| Database              | [PostgreSQL](https://www.postgresql.org/)                                                              | An advanced open-source relational database, chosen for its performance, extensibility, and compliance with SQL standards, serving as the application's data store.     |
+| Authentication        | [Devise](https://github.com/heartcombo/devise)                                                         | A versatile authentication solution for Rails applications, offering secure sign-in, user management, and more, based on Warden.                                         |
+| Testing Framework     | [RSpec](https://rspec.info/)                                                                           | The preferred Behaviour-Driven Development (BDD) framework for Ruby, utilized for writing and executing tests to ensure application reliability and maintain code quality. |
+| Code Quality Tools    | [RuboCop](https://rubocop.org/), [Solargraph](https://solargraph.org/)                                 | RuboCop for enforcing Ruby coding standards and best practices, alongside Solargraph for providing real-time code analysis and insights to maintain high code quality.   |
+
+## Project Architecture
+
+### Key Components
+
+- `Book` and `UserBook` Models: The `Book` model represents books in the application, while the `UserBook` model represents the association between users and books. They are central to the application's functionality.
+
+- Service Classes: The application uses several service classes to encapsulate complex business logic:
+  - `GoogleApiService`: Interacts with the Google Books API to fetch book information.
+  - `GoogleApiParserService`: Parses the data received from the Google Books API.
+  - `CacheService`: Caches search results from the Google Books API to improve performance and reduce the number of API calls.
+  - `BookService` and `UserBookService`: Handle business logic related to books and user-book associations, respectively.
+
+## Data Flow
+
+1. When a user searches for a book, the application makes a request to the Google Books API using the `GoogleApiService`.
+2. The data received from the Google Books API is parsed by the `GoogleApiParserService` and then cached using the `CacheService`.
+3. The parsed data is used to create or update `Book` and `UserBook` records in the database.
+4. The `BookService` and `UserBookService` are used to interact with the `Book` and `UserBook` models, encapsulating the business logic related to these models.
+This architecture allows the application to quickly provide book information to users while minimizing the number of calls to the Google Books API and the amount of data stored in the application's own database.
